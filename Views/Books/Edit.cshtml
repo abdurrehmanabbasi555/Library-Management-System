@@ -1,0 +1,74 @@
+@model LibrarySystem.Models.Book
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1>Edit Book - ID: @Model.BookID</h1>
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger", style = "background: #fee; padding: 10px; margin: 10px 0; border: 1px solid red;" })
+
+    @using (Html.BeginForm("Edit", "Books", new { id = Model.BookID }, FormMethod.Post))
+    {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.BookID)
+
+ <!-- Title Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title, "Title *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-input" })
+        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Author Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.AuthorID, "Author ID *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.AuthorID, new { @class = "form-input", type = "number" })
+        @Html.ValidationMessageFor(m => m.AuthorID, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Author Name Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.AuthorName, "Author Name *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.AuthorName, new { @class = "form-input" })
+        @Html.ValidationMessageFor(m => m.AuthorName, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Price Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.BookPrices, "Price *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.BookPrices, new { @class = "form-input", type = "number", step = "0.01" })
+        @Html.ValidationMessageFor(m => m.BookPrices, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Status Field -->
+    <div class="form-group">
+        <label class="form-label">Status:</label>
+        <div style="display: flex; gap: 20px; align-items: center; margin-top: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Available", new { id = "statusAvailable" })
+                <span>Available</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Not Available", new { id = "statusNotAvailable" })
+                <span>Not Available</span>
+            </label>
+        </div>
+        @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Form Buttons -->
+    <div class="form-buttons">
+        <button type="submit" class="btn-primary">Save Changes</button>
+        <a href="@Url.Action("Index")" class="btn-cancel">Cancel</a>
+    </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<LibrarySystem.Models.Borrowing>
+    @{
+    ViewData["Title"] = "Borrowing History";
+    }
+
+    <div class="form-container" style="max-width: 800px;">
+        <div class="form-header">
+            <h1>Borrowing History</h1>
+            <h3 style="color: #666; font-weight: normal; margin-top: 10px;">Book: @ViewBag.BookTitle</h3>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <a href="@Url.Action("Index", "Books")" class="btn-cancel" style="display: inline-block; padding: 10px 20px;">← Back to Books</a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+    {
+        <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 6px;">
+            <p style="font-size: 18px; color: #666;">No borrowing history for this book.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <th style="padding: 12px; text-align: left;">Borrow Date</th>
+                    <th style="padding: 12px; text-align: left;">Return Date</th>
+                    <th style="padding: 12px; text-align: left;">Status</th>
+                    <th style="padding: 12px; text-align: left;">Days Borrowed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var daysBorrowed = item.ReturnDate.HasValue
+                        ? (item.ReturnDate.Value - item.BorrowDate).Days
+                        : (DateTime.Now - item.BorrowDate).Days;
+
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;">@item.BorrowDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                    <td style="padding: 12px;">
+                        @if (item.ReturnDate.HasValue)
+                            {
+                        @item.ReturnDate.Value.ToString("MMM dd, yyyy hh:mm tt")
+                            }
+                            else
+                            {
+                        <span style="color: #999;">Not returned yet</span>
+                            }
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="padding: 5px 10px; border-radius: 4px; background: @(item.Status == "Borrowed" ? "#fff3cd" : "#d4edda"); color: @(item.Status == "Borrowed" ? "#856404" : "#155724");">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">@daysBorrowed day(s)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+            <strong>Total Records:</strong> @Model.Count()
+            <br />
+            <strong>Currently Borrowed:</strong> @Model.Count(b => b.Status == "Borrowed")
+            <br />
+            <strong>Returned:</strong> @Model.Count(b => b.Status == "Returned")
+        </div>
+    }
+    </div>

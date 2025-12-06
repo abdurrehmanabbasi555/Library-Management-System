@@ -1,0 +1,307 @@
+﻿@model IEnumerable<LibrarySystem.Models.Book>
+
+    @{
+    ViewData["Title"] = "Dashboard";
+    }   
+
+    <div class="dashboard-container">
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1>Dashboard</h1>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card members">
+                    <p class="stat-number">@ViewBag.MemberCount</p>
+                    <p class="stat-label">MEMBERS</p>
+                    <a href="@Url.Action("Index", "Members")" class="stat-link">See all members →</a>
+                </div>
+                <div class="stat-card books">
+                    <p class="stat-number"> @ViewBag.BookCount</p>
+                    <p class="stat-label">BOOKS</p>
+                    <a href="@Url.Action("Index")" class="stat-link">See all books →</a>
+                </div>
+            </div>
+
+            <!-- Debug Information -->
+            @if (ViewBag.DebugInfo != null)
+        {
+            @*<div class="debug-info">
+            <strong>SQL QUERY:</strong> @ViewBag.DebugInfo<br>
+            <strong>BOOKS FOUND:</strong> @ViewBag.BookCount
+        </div>*@
+        }
+
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <!-- Your existing stats cards... -->
+            </div>
+
+            <!-- ADD THIS SEARCH FORM -->
+            <div class="search-filter-section" style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-bottom: 15px; color: #2c3e50;">Search & Filter Books</h3>
+
+                <form method="get" action="@Url.Action("Index")" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: end;">
+
+                    <!-- Search by Title -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Book Title</label>
+                        <input type="text"
+                               name="searchTitle"
+                               value="@ViewBag.SearchTitle"
+                               placeholder="Search by title..."
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" />
+                    </div>
+
+                    <!-- Search by Author -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Author Name</label>
+                        <input type="text"
+                               name="searchAuthor"
+                               value="@ViewBag.SearchAuthor"
+                               placeholder="Search by author..."
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" />
+                    </div>
+
+                    <!-- Filter by Status -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Status</label>
+                        <select name="filterStatus"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <option value="All" selected="@(ViewBag.FilterStatus == "All" || string.IsNullOrEmpty(ViewBag.FilterStatus))">All Status</option>
+                            <option value="Available" selected="@(ViewBag.FilterStatus == "Available")">Available</option>
+                            <option value="Borrowed" selected="@(ViewBag.FilterStatus == "Borrowed")">Borrowed</option>
+                            <option value="Not Available" selected="@(ViewBag.FilterStatus == "Not Available")">Not Available</option>
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit"
+                                style="padding: 10px 30px; background: #3498db; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px;">
+                            🔍 SEARCH
+                        </button>
+                        <a href="@Url.Action("Index")"
+                           style="padding: 10px 30px; background: #95a5a6; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; font-size: 14px;">
+                            ✖ CLEAR
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Results count -->
+                @if (!string.IsNullOrEmpty(ViewBag.SearchTitle) || !string.IsNullOrEmpty(ViewBag.SearchAuthor) || !string.IsNullOrEmpty(ViewBag.FilterStatus))
+    {
+                <div style="margin-top: 15px; padding: 10px; background: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
+                    <strong>Search Results:</strong> Found @ViewBag.BookCount book(s) matching your criteria.
+                </div>
+    }
+            </div>
+
+            <!-- Books Table Section -->
+            <div class="books-section">
+                <div class="section-header">
+                    <h2>Books</h2>
+                    <a href="@Url.Action("Index")" class="see-all-link">See all books →</a>
+                </div>
+
+                @if (Model == null || !Model.Any())
+            {
+                <p>No books found in database</p>
+                <a href="@Url.Action("Create")" class="create-btn">Create New Book</a>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Book ID</th>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Author Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.BookID</td>
+                            <td>@item.Title</td>
+                            <td>@item.BookPrices</td>
+                            <td>@item.Status</td>
+                            <td>@item.AuthorName</td>
+                            <td class="action-links">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.BookID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.BookID }) |
+                                @Html.ActionLink("History", "History", "Borrow", new { bookId = item.BookID }, null)
+
+                                @if (item.Status == "Available")
+    {
+                                <text> | </text>
+                                @using (Html.BeginForm("Borrow", "Borrow", new { bookId = item.BookID }, FormMethod.Post, false, new { style = "display: inline;" }))
+        {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; padding: 0; font: inherit;">
+                                    Borrow
+                                </button>
+        }
+    }
+    else if (item.Status == "Borrowed")
+    {
+                                <text> | </text>
+                                @using (Html.BeginForm("Return", "Borrow", new { bookId = item.BookID }, FormMethod.Post, false, new { style = "display: inline;" }))
+        {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background: none; border: none; color: green; text-decoration: underline; cursor: pointer; padding: 0; font: inherit;">
+                                    Return
+                                </button>
+        }
+    }
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <a href="@Url.Action("Create")" class="create-btn">Create New Book</a>
+            }
+                <!-- Books Table Section Ends-->
+
+
+        <!-- PAGINATION CONTROLS -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 30px; flex-wrap: wrap;">
+                
+                <!-- Previous Button -->
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <a href="@Url.Action("Index", new { 
+                           searchTitle = ViewBag.SearchTitle, 
+                           searchAuthor = ViewBag.SearchAuthor, 
+                           filterStatus = ViewBag.FilterStatus, 
+                           pageNumber = ViewBag.CurrentPage - 1 
+                       })" 
+                       class="pagination-btn" 
+                       style="padding: 10px 15px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                        ← Previous
+                    </a>
+                }
+                else
+                {
+                    <span class="pagination-btn disabled" 
+                          style="padding: 10px 15px; background: #ccc; color: #666; border-radius: 4px; font-weight: bold; cursor: not-allowed;">
+                        ← Previous
+                    </span>
+                }
+
+                <!-- Page Numbers -->
+                @{
+                    // Calculate page range to show (e.g., show 5 pages at a time)
+                    var startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+                    var endPage = Math.Min((int)ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+                }
+
+                <!-- First page + ... if needed -->
+                @if (startPage > 1)
+                {
+                    <a href="@Url.Action("Index", new { 
+                           searchTitle = ViewBag.SearchTitle, 
+                           searchAuthor = ViewBag.SearchAuthor, 
+                           filterStatus = ViewBag.FilterStatus, 
+                           pageNumber = 1 
+                       })" 
+                       class="pagination-number" 
+                       style="padding: 10px 15px; background: white; color: #3498db; text-decoration: none; border: 2px solid #3498db; border-radius: 4px; font-weight: bold;">
+                        1
+                    </a>
+                    
+                    @if (startPage > 2)
+                    {
+                        <span style="padding: 10px; color: #666;">...</span>
+                    }
+                }
+
+                <!-- Page number buttons -->
+                @for (var i = startPage; i <= endPage; i++)
+                {
+                    if (i == ViewBag.CurrentPage)
+                    {
+                        <!-- Current page (highlighted) -->
+                        <span class="pagination-number current" 
+                              style="padding: 10px 15px; background: #3498db; color: white; border: 2px solid #3498db; border-radius: 4px; font-weight: bold;">
+                            @i
+                        </span>
+                    }
+                    else
+                    {
+                        <!-- Other pages -->
+                        <a href="@Url.Action("Index", new { 
+                               searchTitle = ViewBag.SearchTitle, 
+                               searchAuthor = ViewBag.SearchAuthor, 
+                               filterStatus = ViewBag.FilterStatus, 
+                               pageNumber = i 
+                           })" 
+                           class="pagination-number" 
+                           style="padding: 10px 15px; background: white; color: #3498db; text-decoration: none; border: 2px solid #3498db; border-radius: 4px; font-weight: bold;">
+                            @i
+                        </a>
+                    }
+                }
+
+                <!-- ... + Last page if needed -->
+                @if (endPage < ViewBag.TotalPages)
+                {
+                    @if (endPage < ViewBag.TotalPages - 1)
+                    {
+                        <span style="padding: 10px; color: #666;">...</span>
+                    }
+                    
+                    <a href="@Url.Action("Index", new { 
+                           searchTitle = ViewBag.SearchTitle, 
+                           searchAuthor = ViewBag.SearchAuthor, 
+                           filterStatus = ViewBag.FilterStatus, 
+                           pageNumber = ViewBag.TotalPages 
+                       })" 
+                       class="pagination-number" 
+                       style="padding: 10px 15px; background: white; color: #3498db; text-decoration: none; border: 2px solid #3498db; border-radius: 4px; font-weight: bold;">
+                        @ViewBag.TotalPages
+                    </a>
+                }
+
+                <!-- Next Button -->
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <a href="@Url.Action("Index", new { 
+                           searchTitle = ViewBag.SearchTitle, 
+                           searchAuthor = ViewBag.SearchAuthor, 
+                           filterStatus = ViewBag.FilterStatus, 
+                           pageNumber = ViewBag.CurrentPage + 1 
+                       })" 
+                       class="pagination-btn" 
+                       style="padding: 10px 15px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                        Next →
+                    </a>
+                }
+                else
+                {
+                    <span class="pagination-btn disabled" 
+                          style="padding: 10px 15px; background: #ccc; color: #666; border-radius: 4px; font-weight: bold; cursor: not-allowed;">
+                        Next →
+                    </span>
+                }
+
+            </div>
+
+            <!-- Page info -->
+            <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                Page <strong>@ViewBag.CurrentPage</strong> of <strong>@ViewBag.TotalPages</strong>
+            </div>
+        }
+</div>
+            </div>
+        </div>
+   

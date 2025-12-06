@@ -1,0 +1,68 @@
+@model LibrarySystem.Models.Member
+@{
+    ViewData["Title"] = "Edit Member";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1>Edit Member - ID: @Model.MemberID</h1>
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger", style = "background: #fee; padding: 10px; margin: 10px 0; border: 1px solid red;" })
+
+    @using (Html.BeginForm("Edit", "Members", new { id = Model.MemberID }, FormMethod.Post))
+    {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MemberID)
+    @Html.HiddenFor(m => m.MembershipDate)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, "Full Name *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-input" })
+        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, "Email *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-input", type = "email" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.PhoneNumber, "Phone Number *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-input" })
+        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address, "Address *", new { @class = "form-label" })
+        @Html.TextAreaFor(m => m.Address, new { @class = "form-input", rows = 3 })
+        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Status:</label>
+        <div style="display: flex; gap: 20px; align-items: center; margin-top: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Active", new { id = "statusActive" })
+                <span>Active</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Suspended", new { id = "statusSuspended" })
+                <span>Suspended</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-buttons">
+        <button type="submit" class="btn-primary">Save Changes</button>
+        <a href="@Url.Action("Index")" class="btn-cancel">Cancel</a>
+    </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

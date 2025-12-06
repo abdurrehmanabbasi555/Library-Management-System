@@ -1,0 +1,96 @@
+@model LibrarySystem.Models.Book
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1>Add Book</h1>
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger", style = "background: #fee; padding: 10px; margin: 10px 0; border: 1px solid red;" })
+
+    @using (Html.BeginForm("Create", "Books", FormMethod.Post, new { @class = "add-book-form" }))
+    {
+    @Html.AntiForgeryToken()
+ <!-- ADD THIS DEBUG SECTION -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+    <div style="background: yellow; padding: 20px; margin: 10px 0; border: 2px solid red;">
+        <h3>VALIDATION ERRORS:</h3>
+        @foreach (var key in ViewData.ModelState.Keys)
+            {
+                var errors = ViewData.ModelState[key].Errors;
+                if (errors.Any())
+                {
+        <p><strong>@key:</strong></p>
+        <ul>
+            @foreach (var error in errors)
+                        {
+            <li style="color: red;">@error.ErrorMessage</li>
+                        }
+        </ul>
+                }
+            }
+    </div>
+    }
+
+ <!-- Rest of your form... -->
+
+ <!-- Title Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title, "Title *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-input", placeholder = "Enter book title" })
+        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Author Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.AuthorID, "Author ID *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.AuthorID, new { @class = "form-input", placeholder = "Enter author ID", type = "number" })
+        @Html.ValidationMessageFor(m => m.AuthorID, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Author Name Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.AuthorName, "Author Name *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.AuthorName, new { @class = "form-input", placeholder = "Enter Book Author Name" })
+        @Html.ValidationMessageFor(m => m.AuthorName, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Price Field -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.BookPrices, "Price *", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.BookPrices, new { @class = "form-input", placeholder = "Enter book price", type = "number", step = "0.01" })
+        @Html.ValidationMessageFor(m => m.BookPrices, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Status Field -->
+    <div class="form-group">
+        <label class="form-label">Status:</label>
+        <div style="display: flex; gap: 20px; align-items: center; margin-top: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Available", new { id = "statusAvailable" })
+                <span>Available</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                @Html.RadioButtonFor(m => m.Status, "Not Available", new { id = "statusNotAvailable" })
+                <span>Not Available</span>
+            </label>
+        </div>
+        @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger", style = "display: block; color: red; font-weight: bold;" })
+    </div>
+
+ <!-- Form Buttons -->
+    <div class="form-buttons">
+        <button type="submit" class="btn-primary">ADD BOOK</button>
+        <a href="@Url.Action("Index")" class="btn-cancel">CANCEL</a>
+    </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

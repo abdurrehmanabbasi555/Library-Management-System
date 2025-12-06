@@ -1,0 +1,87 @@
+@model IEnumerable<LibrarySystem.Models.Member>
+    @{
+    ViewData["Title"] = "Members";
+    }
+
+    <div class="dashboard-container">
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1>Library Members</h1>
+            </div>
+
+            <!-- Success/Error Messages -->
+            @if (TempData["Success"] != null)
+        {
+            <div style="background: #d4edda; color: #155724; padding: 10px; margin: 10px 0; border: 1px solid #c3e6cb; border-radius: 4px;">
+                <strong>Success:</strong> @TempData["Success"]
+            </div>
+        }
+            @if (TempData["Error"] != null)
+        {
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border: 1px solid #f5c6cb; border-radius: 4px;">
+                <strong>Error:</strong> @TempData["Error"]
+            </div>
+        }
+
+            <!-- Stats Card -->
+            <div class="stats-container">
+                <div class="stat-card members">
+                    <p class="stat-number">@ViewBag.MemberCount</p>
+                    <p class="stat-label">TOTAL MEMBERS</p>
+                </div>
+            </div>
+
+            <!-- Members Table -->
+            <div class="books-section">
+                <div class="section-header">
+                    <h2>All Members</h2>
+                    <a href="@Url.Action("Create")" class="see-all-link">+ Add New Member</a>
+                </div>
+
+                @if (Model == null || !Model.Any())
+            {
+                <p>No members found</p>
+                <a href="@Url.Action("Create")" class="create-btn">Add First Member</a>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Joined Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var member in Model)
+                        {
+                        <tr>
+                            <td>@member.MemberID</td>
+                            <td>@member.Name</td>
+                            <td>@member.Email</td>
+                            <td>@member.PhoneNumber</td>
+                            <td>@member.Address</td>
+                            <td>@member.MembershipDate.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <span style="padding: 5px 10px; border-radius: 4px; background: @(member.Status == "Active" ? "#d4edda" : "#f8d7da"); color: @(member.Status == "Active" ? "#155724" : "#721c24");">
+                                    @member.Status
+                                </span>
+                            </td>
+                            <td class="action-links">
+                                @Html.ActionLink("Edit", "Edit", new { id = member.MemberID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = member.MemberID })
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            </div>
+        </div>
+    </div>
