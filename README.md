@@ -426,7 +426,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 **Abdurrehman Abbasi**
 
 - GitHub: [@abdurrehmanabbasi555](https://github.com/abdurrehmanabbasi555)
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/abdurrehman-abbasi-173217226/)
+- LinkedIn: [My LinkedIn Profile](https://www.linkedin.com/in/abdurrehman-abbasi-173217226/)
 - Email: [My Email](mailto:abbasiabdurrehman555@gmail.com)
 
 ## 🙏 Acknowledgments
